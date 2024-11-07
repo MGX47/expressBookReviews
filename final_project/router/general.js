@@ -32,16 +32,19 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-    const author = req.params.title;
+    const title = req.params.title;
     const booksByTitle = Object.values(books).filter(book => book.title === title);
     return res.status(200).send(JSON.stringify({booksByTitle}, null, 4))
-
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
     const isbn = req.params.isbn;
-    const bookByIsbn = books[isbn] || {};
+    const bookByIsbn = books[isbn]
+    if (!bookByIsbn) {
+        return res.status(404).send("book not found");
+    }
+    
     const bookReviews = bookByIsbn.reviews;
     return res.status(200).send(JSON.stringify({bookReviews}, null, 4))
 });
